@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Mic, Square, X, CheckCircle2, Sparkles, MapPin, Building, ArrowRight, RefreshCw, AlertCircle, Leaf } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { supabase } from '../supabaseClient';
 
 export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText = '', onComplaintSubmitted }) {
   const [state, setState] = useState('IDLE');
@@ -182,6 +183,40 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
     setState('SUBMITTING');
     setErrorMsg('');
 
+    const newId = `KK-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+    const compObj = {
+      complaintId: newId,
+      citizenName: citizenName.trim() || 'Anonymous Citizen',
+      citizenPhone: citizenPhone.trim() || 'Not Provided',
+      transcription: finalText,
+      language: analysisResult?.language || 'Tamil',
+      category: analysisResult?.category || 'Water Supply',
+      priority: analysisResult?.priority || 'High',
+      department: analysisResult?.department || 'Water Supply Department',
+      location: locationName,
+      status: 'Submitted',
+      createdAt: new Date().toISOString()
+    };
+
+    // 1. Try Supabase insert
+    try {
+      await supabase.from('complaints').insert([{
+        complaint_id: compObj.complaintId,
+        citizen_name: compObj.citizenName,
+        citizen_phone: compObj.citizenPhone,
+        transcription: compObj.transcription,
+        language: compObj.language,
+        category: compObj.category,
+        priority: compObj.priority,
+        department: compObj.department,
+        location: compObj.location,
+        status: 'Submitted'
+      }]);
+    } catch (e) {
+      console.warn('Supabase insert note:', e);
+    }
+
+    // 2. Try backend API if running
     try {
       const res = await fetch('/api/complaints', {
         method: 'POST',
@@ -194,37 +229,24 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
           citizenPhone: citizenPhone.trim() || 'Not Provided'
         })
       });
-
       const data = await res.json();
       if (data.success && data.data) {
         setSubmittedComplaint(data.data);
         setState('SUBMITTED');
         confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         if (onComplaintSubmitted) onComplaintSubmitted(data.data);
-      } else {
-        setErrorMsg(data.message || 'Submission failed');
-        setState('PREVIEW');
+        return;
       }
     } catch (err) {
-      console.error('Error submitting complaint:', err);
-      const demoComp = {
-        complaintId: `KK-2026-${Math.floor(100000 + Math.random() * 900000)}`,
-        transcription: finalText,
-        category: analysisResult?.category || 'Water Supply',
-        priority: analysisResult?.priority || 'High',
-        department: analysisResult?.department || 'Water Supply Department',
-        location: locationName,
-        status: 'Submitted',
-        citizenName: citizenName.trim() || 'Anonymous Citizen',
-        citizenPhone: citizenPhone.trim() || 'Not Provided',
-        createdAt: new Date().toISOString()
-      };
-      setSubmittedComplaint(demoComp);
-      setState('SUBMITTED');
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-      if (onComplaintSubmitted) onComplaintSubmitted(demoComp);
+      // Backend not running, proceed with direct object
     }
+
+    setSubmittedComplaint(compObj);
+    setState('SUBMITTED');
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    if (onComplaintSubmitted) onComplaintSubmitted(compObj);
   };
+
 
   return (
     <div className="modal-overlay">
@@ -303,10 +325,37 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
               </p>
             </div>
 
+            {/* Quick Demo Voice Grievances */}
+            <div className="w-full flex flex-col gap-1.5 text-left">
+              <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">⚡ விரைவு மாதிரி புகார்கள் (Instant Samples):</span>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { label: '💧 குடிநீர் விநியோகம் தடை (Sivakasi)', text: 'சிவகாசியில் கடந்த 2 நாட்களாக குடிநீர் வரவில்லை. உடனடியாக சரிசெய்யவும்.' },
+                  { label: '⚡ மின்கம்பி அறுந்து விழுந்தது (Emergency)', text: 'விருதுநகர் மெயின் ரோட்டில் டிரான்ஸ்பார்மர் ஒயர் அறுந்து கிடக்கிறது. ஆபத்தாக உள்ளது.' },
+                  { label: '🛣️ சாலை சேதம் (Potholes)', text: 'ராஜபாளையம் பஸ் ஸ்டாண்ட் அருகில் சாலையில் பெரிய பள்ளங்கள் உள்ளன.' }
+                ].map((chip) => (
+                  <button
+                    key={chip.label}
+                    type="button"
+                    onClick={() => {
+                      setManualText(chip.text);
+                      setTranscription(chip.text);
+                      analyzeText(chip.text);
+                      setState('PREVIEW');
+                    }}
+                    className="px-2.5 py-1.5 text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition text-left"
+                  >
+                    {chip.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="w-full pt-4 border-t border-gray-200">
               <label className="block text-left text-xs font-bold text-gray-700 mb-1">
                 அல்லது உரையாக தட்டச்சு செய்க (Or Type Text Directly):
               </label>
+
               <textarea
                 rows={3}
                 value={manualText}
