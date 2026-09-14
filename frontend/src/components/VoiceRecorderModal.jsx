@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Mic, Square, X, CheckCircle2, Sparkles, MapPin, Building, ArrowRight, RefreshCw, AlertCircle, Leaf } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { supabase } from '../supabaseClient';
+import { submitNewComplaint } from '../services/complaintService';
+
 
 export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText = '', onComplaintSubmitted }) {
   const [state, setState] = useState('IDLE');
@@ -183,69 +185,23 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
     setState('SUBMITTING');
     setErrorMsg('');
 
-    const newId = `KK-2026-${Math.floor(100000 + Math.random() * 900000)}`;
-    const compObj = {
-      complaintId: newId,
-      citizenName: citizenName.trim() || 'Anonymous Citizen',
-      citizenPhone: citizenPhone.trim() || 'Not Provided',
+    const compObj = await submitNewComplaint({
       transcription: finalText,
       language: analysisResult?.language || 'Tamil',
       category: analysisResult?.category || 'Water Supply',
       priority: analysisResult?.priority || 'High',
       department: analysisResult?.department || 'Water Supply Department',
       location: locationName,
-      status: 'Submitted',
-      createdAt: new Date().toISOString()
-    };
-
-    // 1. Try Supabase insert
-    try {
-      await supabase.from('complaints').insert([{
-        complaint_id: compObj.complaintId,
-        citizen_name: compObj.citizenName,
-        citizen_phone: compObj.citizenPhone,
-        transcription: compObj.transcription,
-        language: compObj.language,
-        category: compObj.category,
-        priority: compObj.priority,
-        department: compObj.department,
-        location: compObj.location,
-        status: 'Submitted'
-      }]);
-    } catch (e) {
-      console.warn('Supabase insert note:', e);
-    }
-
-    // 2. Try backend API if running
-    try {
-      const res = await fetch('/api/complaints', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          transcription: finalText,
-          language: analysisResult?.language || 'Tamil',
-          location: locationName,
-          citizenName: citizenName.trim() || 'Anonymous Citizen',
-          citizenPhone: citizenPhone.trim() || 'Not Provided'
-        })
-      });
-      const data = await res.json();
-      if (data.success && data.data) {
-        setSubmittedComplaint(data.data);
-        setState('SUBMITTED');
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        if (onComplaintSubmitted) onComplaintSubmitted(data.data);
-        return;
-      }
-    } catch (err) {
-      // Backend not running, proceed with direct object
-    }
+      citizenName: citizenName.trim() || 'Anonymous Citizen',
+      citizenPhone: citizenPhone.trim() || 'Not Provided'
+    });
 
     setSubmittedComplaint(compObj);
     setState('SUBMITTED');
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     if (onComplaintSubmitted) onComplaintSubmitted(compObj);
   };
+
 
 
   return (

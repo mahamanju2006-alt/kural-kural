@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Clock, CheckCircle2, AlertTriangle, Eye, Star, MapPin, Plus, Leaf, RefreshCw } from 'lucide-react';
+import { fetchAllComplaints } from '../services/complaintService';
+
 
 const STATUS_COLORS = {
   'Submitted': { bg: '#dbeafe', color: '#1e40af' },
@@ -47,15 +49,15 @@ export default function CitizenDashboard({ lang, onOpenVoiceModal, onTrackSelect
   const fetchCitizenComplaints = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/complaints');
-      const data = await res.json();
-      if (data.success) setComplaints(data.data);
+      const data = await fetchAllComplaints();
+      setComplaints(data || []);
     } catch (err) {
       console.error('Error fetching citizen complaints:', err);
     } finally {
       setLoading(false);
     }
   };
+
 
   const total = complaints.length;
   const pending = complaints.filter(c => ['Submitted', 'AI Verified', 'Department Assigned', 'Officer Assigned'].includes(c.status)).length;

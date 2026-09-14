@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, CheckCircle2, Clock, MapPin, Building, Star, Leaf, RefreshCw, AlertCircle, ArrowRight } from 'lucide-react';
+import { searchComplaint } from '../services/complaintService';
 
 const STATUS_COLORS = {
   'Submitted': { bg: '#dbeafe', color: '#1e40af', label: 'Submitted' },
@@ -39,35 +40,21 @@ export default function TrackComplaint({ lang, initialSearchId = '', onOpenFeedb
     setHasSearched(true);
 
     try {
-      // First try direct ID lookup
-      const res = await fetch(`/api/complaints/${encodeURIComponent(q)}`);
-      const data = await res.json();
-      if (data.success && data.data) {
-        setComplaint(data.data);
-        setLoading(false);
-        return;
-      }
-    } catch (err) {
-      // Try search fallback
-    }
-
-    try {
-      // Search by phone/name
-      const searchRes = await fetch(`/api/complaints?search=${encodeURIComponent(q)}`);
-      const searchData = await searchRes.json();
-      if (searchData.success && searchData.data && searchData.data.length > 0) {
-        setComplaint(searchData.data[0]);
+      const match = await searchComplaint(q);
+      if (match) {
+        setComplaint(match);
       } else {
         setComplaint(null);
-        setErrorMsg(`No grievance record found for "${q}". Try a valid Complaint ID (KK-2026-XXXXX) or Mobile Number.`);
+        setErrorMsg(`No grievance record found for "${q}". Try a valid Complaint ID (e.g. KK-2026-48321) or Mobile Number.`);
       }
     } catch (err) {
       setComplaint(null);
-      setErrorMsg('Unable to connect to the grievance database. Please try again.');
+      setErrorMsg(`No grievance record found for "${q}". Try one of the demo IDs above.`);
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

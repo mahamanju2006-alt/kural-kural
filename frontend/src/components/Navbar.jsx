@@ -21,7 +21,7 @@ export default function Navbar({ activeTab, setActiveTab, lang, setLang, onOpenV
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', fontSize: '0.7rem', fontWeight: 700, color: '#b5d095' }}>
             <Leaf style={{ width: '13px', height: '13px', flexShrink: 0 }} />
-            <span style={{ letterSpacing: '0.03em' }}>GOVERNMENT OF TAMIL NADU • MUNICIPAL ADMINISTRATION & WATER SUPPLY DEPT</span>
+            <span style={{ letterSpacing: '0.03em' }}>{lang === 'ta' ? 'தமிழ்நாடு அரசு' : 'GOVERNMENT OF TAMIL NADU'}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexShrink: 0 }}>
             <span style={{ fontSize: '0.7rem', color: '#b5d095', fontWeight: 600, display: 'none' }}>
@@ -64,9 +64,10 @@ export default function Navbar({ activeTab, setActiveTab, lang, setLang, onOpenV
                 KURAL KURAL
               </span>
               <span style={{ background: 'rgba(181,208,149,0.15)', color: '#b5d095', border: '1px solid rgba(181,208,149,0.3)', fontSize: '0.6rem', fontWeight: 800, padding: '0.15rem 0.5rem', borderRadius: '9999px', letterSpacing: '0.05em' }}>
-                PUBLIC GRIEVANCE
+                {lang === 'ta' ? 'பொதுமக்கள் குறைதீர்ப்பு' : 'PUBLIC GRIEVANCE'}
               </span>
             </div>
+
             <p style={{ fontSize: '0.7rem', color: '#b5d095', fontWeight: 600, margin: '0.1rem 0 0', letterSpacing: '0.02em' }}>
               {lang === 'ta' ? 'உங்கள் குரல் — உங்கள் உரிமை' : 'Your Voice. Your Complaint. Your Right.'}
             </p>

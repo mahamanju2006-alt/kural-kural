@@ -29,7 +29,7 @@ export default function HeroSection({ lang, onOpenVoiceModal, onTrackClick }) {
               letterSpacing: '0.1em', textTransform: 'uppercase', alignSelf: 'flex-start'
             }}>
               <Leaf style={{ width: '13px', height: '13px', color: '#b5d095' }} />
-              Voice-First Citizen Grievance Redressal
+              {lang === 'ta' ? 'குரல்-வழி பொதுமக்கள் குறைதீர்ப்பு தளம்' : 'Voice-First Citizen Grievance Redressal'}
             </div>
 
             {/* Main Title */}
@@ -91,13 +91,12 @@ export default function HeroSection({ lang, onOpenVoiceModal, onTrackClick }) {
               </button>
             </div>
 
-
             {/* Key indicators */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', paddingTop: '1rem', borderTop: '1px solid rgba(116,198,157,0.2)', marginTop: '0.25rem' }}>
               {[
-                { icon: <Zap style={{ width: '14px', height: '14px' }} />, label: 'Speech-to-Text AI' },
-                { icon: <Clock style={{ width: '14px', height: '14px' }} />, label: '48-Hour SLA' },
-                { icon: <Building2 style={{ width: '14px', height: '14px' }} />, label: 'Dept Routing' },
+                { icon: <Zap style={{ width: '14px', height: '14px' }} />, label: lang === 'ta' ? 'குரல்-முதல்-உரை AI' : 'Speech-to-Text AI' },
+                { icon: <Clock style={{ width: '14px', height: '14px' }} />, label: lang === 'ta' ? '48 மணிநேர சேவை வாக்குறுதி' : '48-Hour SLA' },
+                { icon: <Building2 style={{ width: '14px', height: '14px' }} />, label: lang === 'ta' ? 'தானியங்கி துறை இணைப்பு' : 'Dept Routing' },
               ].map(item => (
                 <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: 600, color: '#d8f3dc' }}>
                   <span style={{ color: '#b5d095' }}>{item.icon}</span>
@@ -119,21 +118,21 @@ export default function HeroSection({ lang, onOpenVoiceModal, onTrackClick }) {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(116,198,157,0.2)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', fontWeight: 800, color: '#b5d095', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                   <ShieldCheck style={{ width: '16px', height: '16px' }} />
-                  Connected Departments
+                  {lang === 'ta' ? 'இணைக்கப்பட்ட அரசுத் துறைகள்' : 'Connected Departments'}
                 </div>
                 <div style={{ background: 'rgba(181,208,149,0.15)', color: '#b5d095', border: '1px solid rgba(181,208,149,0.3)', padding: '0.2rem 0.65rem', borderRadius: '9999px', fontSize: '0.65rem', fontWeight: 800 }}>
-                  LIVE PORTAL
+                  {lang === 'ta' ? 'நேரலை தளம்' : 'LIVE PORTAL'}
                 </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem', marginBottom: '1.25rem' }}>
                 {[
-                  { dept: 'Water Supply & Sanitation', color: '#74c69d' },
-                  { dept: 'TNEB Power & Electricity', color: '#74c69d' },
-                  { dept: 'Highways & Road Potholes', color: '#74c69d' },
-                  { dept: 'Solid Waste Management', color: '#74c69d' },
-                  { dept: 'Public Health & Drainage', color: '#74c69d' },
-                  { dept: 'District Administration', color: '#74c69d' },
+                  { dept: lang === 'ta' ? 'குடிநீர் விநியோகம் & சுகாதாரம்' : 'Water Supply & Sanitation', color: '#74c69d' },
+                  { dept: lang === 'ta' ? 'மின்சாரம் & மின்வாரியம் (TNEB)' : 'TNEB Power & Electricity', color: '#74c69d' },
+                  { dept: lang === 'ta' ? 'நெடுஞ்சாலை & சாலைகள்' : 'Highways & Road Potholes', color: '#74c69d' },
+                  { dept: lang === 'ta' ? 'திடக்கழிவு மேலாண்மை (குப்பை)' : 'Solid Waste Management', color: '#74c69d' },
+                  { dept: lang === 'ta' ? 'பொதுச்சுகாதாரம் & சாக்கடை' : 'Public Health & Drainage', color: '#74c69d' },
+                  { dept: lang === 'ta' ? 'மாவட்ட நிர்வாகம்' : 'District Administration', color: '#74c69d' },
                 ].map(item => (
                   <div key={item.dept} style={{ background: 'rgba(27, 67, 50, 0.6)', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid rgba(116,198,157,0.15)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.color, flexShrink: 0 }} />
@@ -145,8 +144,12 @@ export default function HeroSection({ lang, onOpenVoiceModal, onTrackClick }) {
               <div style={{ background: 'rgba(54, 104, 47, 0.5)', border: '1px solid rgba(181,208,149,0.2)', borderRadius: '0.875rem', padding: '1rem', display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
                 <PhoneCall style={{ width: '24px', height: '24px', color: '#b5d095', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'white' }}>Toll-Free Grievance Hotline</div>
-                  <div style={{ fontSize: '0.75rem', color: '#b5d095', fontWeight: 600 }}>📞 1800-425-2026 (Voice Assistance)</div>
+                  <div style={{ fontSize: '0.8125rem', fontWeight: 800, color: 'white' }}>
+                    {lang === 'ta' ? 'கட்டணமில்லா குறைதீர்ப்பு உதவி எண்' : 'Toll-Free Grievance Hotline'}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#b5d095', fontWeight: 600 }}>
+                    {lang === 'ta' ? '📞 1800-425-2026 (குரல் உதவி)' : '📞 1800-425-2026 (Voice Assistance)'}
+                  </div>
                 </div>
               </div>
 
@@ -161,11 +164,12 @@ export default function HeroSection({ lang, onOpenVoiceModal, onTrackClick }) {
                 onMouseEnter={e => { e.currentTarget.style.background = '#a1c27c'; e.currentTarget.style.transform = 'scale(1.02)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = '#b5d095'; e.currentTarget.style.transform = 'none'; }}
               >
-                🎤 Click to Speak Grievance (தமிழ் / English)
+                {lang === 'ta' ? '🎤 குரல் மூலம் புகார் கூற அழுத்தவும்' : '🎤 Click to Speak Grievance (தமிழ் / English)'}
               </button>
 
             </div>
           </div>
+
 
         </div>
 
