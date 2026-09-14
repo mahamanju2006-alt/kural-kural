@@ -67,45 +67,45 @@ export default function CitizenDashboard({ lang, onOpenVoiceModal, onTrackSelect
       <div className="container">
         
         {/* Header */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '2rem' }}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <div>
-            <div className="section-badge" style={{ marginBottom: '0.75rem' }}>
+            <div className="section-badge" style={{ marginBottom: '0.5rem' }}>
               <Leaf style={{ width: '12px', height: '12px' }} />
               Public Grievance Portal
             </div>
-            <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 900, color: 'var(--primary-deep)', margin: 0 }}>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 900, color: 'var(--primary-deep)', margin: 0 }}>
               {lang === 'ta' ? 'என் புகார்கள் மேலாண்மை' : 'My Complaints Dashboard'}
             </h2>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 500, marginTop: '0.4rem' }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500, marginTop: '0.25rem' }}>
               {lang === 'ta' ? 'நீங்கள் பதிவு செய்த அனைத்து குரல் புகார்களின் பட்டியல்' : 'Track and manage your submitted civic grievances in real-time.'}
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0 }}>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={fetchCitizenComplaints}
               style={{
-                display: 'flex', alignItems: 'center', gap: '0.4rem',
-                padding: '0.6rem 1rem', background: 'white', border: '1.5px solid var(--border-sage)',
-                borderRadius: '9999px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 700,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
+                padding: '0.55rem 0.9rem', background: 'white', border: '1.5px solid var(--border-sage)',
+                borderRadius: '9999px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 700,
                 color: 'var(--primary-deep)', fontFamily: 'inherit'
               }}
             >
-              <RefreshCw style={{ width: '14px', height: '14px' }} />
+              <RefreshCw style={{ width: '13px', height: '13px' }} />
               Refresh
             </button>
             <button
               onClick={onOpenVoiceModal}
-              className="btn btn-primary btn-sm"
+              className="btn btn-primary btn-sm flex-1 sm:flex-initial"
             >
-              <Plus style={{ width: '16px', height: '16px' }} />
+              <Plus style={{ width: '15px', height: '15px' }} />
               {lang === 'ta' ? 'புதிய புகார்' : 'New Complaint'}
             </button>
           </div>
         </div>
 
-        {/* Stats Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        {/* Stats Row (2 columns on mobile, 4 columns on desktop) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
             { label: 'Total Filed', value: total, icon: '📋', color: 'var(--primary-deep)', bg: 'var(--secondary-pale)', border: 'var(--border-sage)' },
             { label: 'In Progress', value: pending, icon: '⏳', color: '#92400e', bg: '#fef3c7', border: '#fde68a' },
@@ -114,15 +114,16 @@ export default function CitizenDashboard({ lang, onOpenVoiceModal, onTrackSelect
           ].map(stat => (
             <div key={stat.label} style={{
               background: stat.bg, border: `1px solid ${stat.border}`,
-              borderRadius: 'var(--radius-md)', padding: '1.25rem',
-              display: 'flex', flexDirection: 'column', gap: '0.25rem'
+              borderRadius: 'var(--radius-md)', padding: '1rem',
+              display: 'flex', flexDirection: 'column', gap: '0.2rem'
             }}>
-              <span style={{ fontSize: '1.5rem' }}>{stat.icon}</span>
-              <span style={{ fontSize: '1.75rem', fontWeight: 900, color: stat.color, lineHeight: 1 }}>{stat.value}</span>
-              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: stat.color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{stat.label}</span>
+              <span style={{ fontSize: '1.25rem' }}>{stat.icon}</span>
+              <span style={{ fontSize: '1.5rem', fontWeight: 900, color: stat.color, lineHeight: 1 }}>{stat.value}</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 700, color: stat.color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{stat.label}</span>
             </div>
           ))}
         </div>
+
 
         {/* Table */}
         <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-sage)', boxShadow: 'var(--shadow-md)', overflow: 'hidden' }}>

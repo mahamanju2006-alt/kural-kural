@@ -98,51 +98,50 @@ export default function TrackComplaint({ lang, initialSearchId = '', onOpenFeedb
 
         {/* Search Bar */}
         <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '2px solid var(--border-sage)', boxShadow: 'var(--shadow-md)', padding: '1.25rem', marginBottom: '2rem' }}>
-          <form onSubmit={handleSubmit}>
-            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <div style={{ flex: 1, position: 'relative', minWidth: '220px' }}>
-                <Search style={{ width: '20px', height: '20px', color: '#9ca3af', position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
-                <input
-                  type="text"
-                  value={searchId}
-                  onChange={(e) => setSearchId(e.target.value)}
-                  placeholder={lang === 'ta' ? 'புகார் எண் அல்லது மொபைல் எண்...' : 'Enter Complaint ID or Mobile Number...'}
-                  style={{
-                    width: '100%', paddingLeft: '3rem', paddingRight: '1rem', paddingTop: '0.85rem', paddingBottom: '0.85rem',
-                    border: '1.5px solid var(--border-color)', borderRadius: '0.875rem',
-                    fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-main)',
-                    outline: 'none', fontFamily: 'inherit', transition: 'border-color 0.2s'
-                  }}
-                  onFocus={e => e.target.style.borderColor = 'var(--primary-forest)'}
-                  onBlur={e => e.target.style.borderColor = 'var(--border-color)'}
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn btn-primary"
-                style={{ padding: '0.85rem 1.75rem', fontSize: '0.9375rem', flexShrink: 0 }}
-              >
-                {loading ? (
-                  <>
-                    <RefreshCw style={{ width: '16px', height: '16px', animation: 'spin 1s linear infinite' }} />
-                    <span>Searching...</span>
-                  </>
-                ) : (
-                  <>
-                    <Search style={{ width: '16px', height: '16px' }} />
-                    <span>{lang === 'ta' ? 'தேடுக' : 'Search Status'}</span>
-                  </>
-                )}
-              </button>
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+            <div style={{ flex: 1, position: 'relative' }}>
+              <Search style={{ width: '18px', height: '18px', color: '#9ca3af', position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+              <input
+                type="text"
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
+                placeholder={lang === 'ta' ? 'புகார் எண் அல்லது மொபைல் எண்...' : 'Enter Complaint ID or Mobile Number...'}
+                style={{
+                  width: '100%', paddingLeft: '2.75rem', paddingRight: '1rem', paddingTop: '0.8rem', paddingBottom: '0.8rem',
+                  border: '1.5px solid var(--border-color)', borderRadius: '0.875rem',
+                  fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-main)',
+                  outline: 'none', fontFamily: 'inherit', transition: 'border-color 0.2s'
+                }}
+                onFocus={e => e.target.style.borderColor = 'var(--primary-forest)'}
+                onBlur={e => e.target.style.borderColor = 'var(--border-color)'}
+              />
             </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary btn-mobile-full"
+              style={{ padding: '0.8rem 1.6rem', fontSize: '0.9rem', flexShrink: 0 }}
+            >
+              {loading ? (
+                <>
+                  <RefreshCw style={{ width: '15px', height: '15px', animation: 'spin 1s linear infinite' }} />
+                  <span>Searching...</span>
+                </>
+              ) : (
+                <>
+                  <Search style={{ width: '15px', height: '15px' }} />
+                  <span>{lang === 'ta' ? 'தேடுக' : 'Search Status'}</span>
+                </>
+              )}
+            </button>
           </form>
 
           {/* Quick Demo Search */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem', marginTop: '0.875rem', paddingTop: '0.875rem', borderTop: '1px solid var(--border-color)' }}>
-            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.4rem', marginTop: '0.875rem', paddingTop: '0.875rem', borderTop: '1px solid var(--border-color)' }}>
+            <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>
               Quick Demo:
             </span>
+
             {DEMO_IDS.map((id) => (
               <button
                 key={id}

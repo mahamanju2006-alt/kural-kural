@@ -553,16 +553,76 @@ img, video {
 .priority-low { color: #6b7280; }
 
 /* ===================================================
-   RESPONSIVE UTILITIES
+   RESPONSIVE UTILITIES & MOBILE ALIGNMENT
    =================================================== */
 
 @media (max-width: 768px) {
   .container {
-    padding: 0 1rem;
+    padding: 0 1rem !important;
   }
+  
+  .page-section {
+    padding: 2.5rem 0 !important;
+  }
+
+  .modal-overlay {
+    padding: 0.75rem !important;
+    align-items: center;
+  }
+
+
   .modal-content {
-    padding: 1.25rem;
-    border-radius: var(--radius-md);
+    padding: 1.25rem 1rem !important;
+    border-radius: var(--radius-md) !important;
+    max-height: 94vh !important;
+  }
+
+  /* Buttons on mobile */
+  .btn-mobile-full {
+    width: 100% !important;
+  }
+
+  /* Grid adjustments for mobile */
+  .grid-mobile-1 {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .grid-mobile-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Font Scaling on Mobile */
+  h1 {
+    font-size: 1.85rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.45rem !important;
+    line-height: 1.25 !important;
+  }
+
+  /* Tables horizontal scrolling indicator */
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.75rem !important;
+  }
+
+  .btn {
+    padding: 0.65rem 1.15rem;
+    font-size: 0.8125rem;
+  }
+
+  .stat-card-value {
+    font-size: 1.5rem;
   }
 }
 
@@ -581,14 +641,14 @@ img, video {
 
 .grid-auto-fit-200 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
 }
 
 .grid-auto-fit-280 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
 }
 
 /* ===================================================
@@ -598,4 +658,5 @@ img, video {
 .hover\:bg-sage-50:hover {
   background-color: #f4f8ee;
 }
+
 

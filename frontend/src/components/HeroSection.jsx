@@ -52,19 +52,20 @@ export default function HeroSection({ lang, onOpenVoiceModal, onTrackClick }) {
             </div>
 
             {/* CTA Buttons */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.875rem' }}>
+            <div className="flex flex-col sm:flex-row gap-3 w-full">
               <button
                 onClick={onOpenVoiceModal}
+                className="btn-mobile-full"
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.625rem',
-                  padding: '1rem 1.75rem', borderRadius: '9999px',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.625rem',
+                  padding: '0.9rem 1.6rem', borderRadius: '9999px',
                   background: '#b5d095', color: '#152612',
                   fontWeight: 800, fontSize: '0.9375rem', cursor: 'pointer',
                   border: 'none', boxShadow: '0 8px 24px rgba(181,208,149,0.3)',
                   transition: 'all 0.22s ease', fontFamily: 'inherit'
                 }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#a1c27c'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(181,208,149,0.4)'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = '#b5d095'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(181,208,149,0.3)'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#a1c27c'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#b5d095'; e.currentTarget.style.transform = 'none'; }}
               >
                 <Mic style={{ width: '18px', height: '18px' }} />
                 <span>{lang === 'ta' ? 'குரல் மூலம் புகார் பேசுக' : 'Submit Voice Grievance'}</span>
@@ -73,9 +74,10 @@ export default function HeroSection({ lang, onOpenVoiceModal, onTrackClick }) {
 
               <button
                 onClick={onTrackClick}
+                className="btn-mobile-full"
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.625rem',
-                  padding: '1rem 1.5rem', borderRadius: '9999px',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.625rem',
+                  padding: '0.9rem 1.4rem', borderRadius: '9999px',
                   background: 'rgba(255,255,255,0.1)', color: 'white',
                   fontWeight: 700, fontSize: '0.9375rem', cursor: 'pointer',
                   border: '1.5px solid rgba(181,208,149,0.35)', backdropFilter: 'blur(8px)',
@@ -88,6 +90,7 @@ export default function HeroSection({ lang, onOpenVoiceModal, onTrackClick }) {
                 <span>{lang === 'ta' ? 'புகார் கண்காணிப்பு' : 'Track Grievance'}</span>
               </button>
             </div>
+
 
             {/* Key indicators */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.25rem', paddingTop: '1rem', borderTop: '1px solid rgba(116,198,157,0.2)', marginTop: '0.25rem' }}>
