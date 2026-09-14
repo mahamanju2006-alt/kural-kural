@@ -5,7 +5,33 @@ import { supabase } from '../supabaseClient';
 import { submitNewComplaint } from '../services/complaintService';
 
 
+const TA_CAT_MAP = {
+  'Water Supply': 'குடிநீர் விநியோகம் (Water Supply)',
+  'Electricity & Power': 'மின்சாரம் & மின்வாரியம் (Electricity)',
+  'Roads & Bridges': 'சாலை & பாலங்கள் (Roads)',
+  'Drainage & Sewage': 'சாக்கடை & கழிவுநீர் (Drainage)',
+  'Waste Management': 'குப்பை மேலாண்மை (Waste)',
+  'General Public Grievance': 'பொதுமக்கள் குறைதீர்ப்பு (General)'
+};
+
+const TA_DEPT_MAP = {
+  'Water Supply & Sanitation Department': 'குடிநீர் வழங்கல் & சுகாதாரத் துறை',
+  'Tamil Nadu Electricity Board (TNEB)': 'தமிழ்நாடு மின்வாரியம் (TNEB)',
+  'Highways & Rural Roads Department': 'நெடுஞ்சாலை & ஊரகச் சாலைத் துறை',
+  'Public Health & Drainage Department': 'பொதுச்சுகாதாரம் & சாக்கடைத் துறை',
+  'Municipal Solid Waste Management': 'நகராட்சி திடக்கழிவு மேலாண்மைத் துறை',
+  'District Administrative Office': 'மாவட்ட ஆட்சியர் நிர்வாக அலுவலகம்'
+};
+
+const TA_PRIO_MAP = {
+  'Emergency': 'அவசரம் (Emergency)',
+  'High': 'அதி முக்கியம் (High)',
+  'Medium': 'நடுத்தரம் (Medium)',
+  'Low': 'சாதாரண (Low)'
+};
+
 export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText = '', onComplaintSubmitted }) {
+
   const [state, setState] = useState('IDLE');
   const [selectedLang, setSelectedLang] = useState('ta-IN');
   
@@ -139,23 +165,29 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
     let prio = 'Medium';
     let loc = locationName;
 
-    if (text.includes('குடிநீர்') || text.includes('தண்ணீர்') || lower.includes('water') || lower.includes('tap')) {
+    const hasWater = lower.includes('water') || lower.includes('tap') || lower.includes('pipe') || lower.includes('supply') || lower.includes('leak') || text.includes('குடிநீர்') || text.includes('தண்ணீர்') || text.includes('வாட்டர்') || text.includes('குழாய்');
+    const hasPower = lower.includes('power') || lower.includes('electricity') || lower.includes('wire') || lower.includes('current') || lower.includes('spark') || lower.includes('tneb') || lower.includes('eb') || text.includes('மின்சாரம்') || text.includes('ஒயர்') || text.includes('மின்சார') || text.includes('கரண்ட்') || text.includes('டிரான்ஸ்பார்மர்') || text.includes('கம்பி');
+    const hasRoad = lower.includes('road') || lower.includes('pothole') || lower.includes('street') || lower.includes('bridge') || text.includes('சாலை') || text.includes('ரோடு') || text.includes('ரோட்') || text.includes('பள்ளம்') || text.includes('குண்டும்');
+    const hasDrainage = lower.includes('drainage') || lower.includes('sewage') || lower.includes('drain') || text.includes('சாக்கடை') || text.includes('கழிவுநீர்') || text.includes('டிரைனேஜ்');
+    const hasWaste = lower.includes('garbage') || lower.includes('waste') || lower.includes('trash') || lower.includes('dump') || text.includes('குப்பை') || text.includes('கழிவு');
+
+    if (hasWater) {
       cat = 'Water Supply';
       dept = 'Water Supply & Sanitation Department';
-      prio = text.includes('இரண்டு') || text.includes('2') || lower.includes('urgent') ? 'High' : 'Medium';
-    } else if (text.includes('மின்சாரம்') || text.includes('ஒயர்') || lower.includes('power') || lower.includes('electricity') || lower.includes('wire')) {
+      prio = text.includes('இரண்டு') || text.includes('2') || lower.includes('urgent') || lower.includes('days') || lower.includes('2 days') ? 'High' : 'Medium';
+    } else if (hasPower) {
       cat = 'Electricity & Power';
       dept = 'Tamil Nadu Electricity Board (TNEB)';
-      prio = text.includes('அறுந்து') || lower.includes('spark') ? 'Emergency' : 'High';
-    } else if (text.includes('சாலை') || text.includes('ரோடு') || lower.includes('road') || lower.includes('pothole')) {
+      prio = text.includes('அறுந்து') || lower.includes('spark') || lower.includes('snap') || lower.includes('emergency') ? 'Emergency' : 'High';
+    } else if (hasRoad) {
       cat = 'Roads & Bridges';
       dept = 'Highways & Rural Roads Department';
       prio = 'High';
-    } else if (text.includes('சாக்கடை') || lower.includes('drainage') || lower.includes('sewage')) {
+    } else if (hasDrainage) {
       cat = 'Drainage & Sewage';
       dept = 'Public Health & Drainage Department';
       prio = 'High';
-    } else if (text.includes('குப்பை') || lower.includes('garbage') || lower.includes('waste')) {
+    } else if (hasWaste) {
       cat = 'Waste Management';
       dept = 'Municipal Solid Waste Management';
       prio = 'Medium';
@@ -164,6 +196,7 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
     if (text.includes('சிவகாசி') || lower.includes('sivakasi')) loc = 'Sivakasi';
     if (text.includes('விருதுநகர்') || lower.includes('virudhunagar')) loc = 'Virudhunagar';
     if (text.includes('ராஜபாளையம்') || lower.includes('rajapalayam')) loc = 'Rajapalayam';
+    if (text.includes('அருப்புக்கோட்டை') || lower.includes('aruppukkottai')) loc = 'Aruppukkottai';
 
     setLocationName(loc);
     setAnalysisResult({
@@ -174,6 +207,7 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
       location: loc
     });
   };
+
 
   const handleSubmitComplaint = async () => {
     const finalText = (transcription || manualText).trim();
@@ -398,16 +432,18 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
             <p className="text-xs text-gray-500">Extracting Category • Priority • Department • Location</p>
           </div>
         )}
-
         {/* STATE 4: PREVIEW */}
+
         {state === 'PREVIEW' && analysisResult && (
           <div className="flex flex-col gap-5 py-2">
             
             <div className="bg-[#f4f8ee] p-4 rounded-2xl border border-[#cbe0b3]">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-extrabold text-[#152612] uppercase tracking-wide">CAPTURED VOICE TRANSCRIPTION</span>
+                <span className="text-xs font-extrabold text-[#152612] uppercase tracking-wide">
+                  {lang === 'ta' ? 'பதிவு செய்யப்பட்ட குரல் உரை' : 'CAPTURED VOICE TRANSCRIPTION'}
+                </span>
                 <span className="text-xs font-bold bg-[#cbe0b3] text-[#152612] px-2.5 py-0.5 rounded-full">
-                  {analysisResult.language}
+                  {analysisResult.language === 'Tamil' && lang === 'ta' ? 'தமிழ்' : analysisResult.language}
                 </span>
               </div>
               <textarea
@@ -419,51 +455,59 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
                   analyzeText(e.target.value);
                 }}
                 className="w-full bg-white p-3 text-sm font-semibold text-gray-900 rounded-xl border border-sage-300 focus:outline-none font-ta"
-                placeholder="Captured voice transcription..."
+                placeholder={lang === 'ta' ? 'குரல் உரை இங்கே தோன்றும்...' : 'Captured voice transcription...'}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               
               <div className="bg-emerald-50/80 p-3.5 rounded-2xl border border-emerald-100">
-                <span className="text-[11px] font-bold text-emerald-900 block uppercase">CATEGORY IDENTIFIED</span>
-                <span className="text-sm font-extrabold text-[#152612] flex items-center gap-1.5 mt-1">
-                  <Sparkles className="w-4 h-4 text-[#36682f]" />
-                  {analysisResult.category}
+                <span className="text-[11px] font-bold text-emerald-900 block uppercase">
+                  {lang === 'ta' ? 'கண்டறியப்பட்ட புகார் பிரிவு' : 'CATEGORY IDENTIFIED'}
+                </span>
+                <span className="text-xs sm:text-sm font-extrabold text-[#152612] flex items-center gap-1.5 mt-1">
+                  <Sparkles className="w-4 h-4 text-[#36682f] flex-shrink-0" />
+                  {lang === 'ta' ? (TA_CAT_MAP[analysisResult.category] || analysisResult.category) : analysisResult.category}
                 </span>
               </div>
 
               <div className="bg-purple-50/80 p-3.5 rounded-2xl border border-purple-100">
-                <span className="text-[11px] font-bold text-purple-900 block uppercase">PRIORITY TAG</span>
+                <span className="text-[11px] font-bold text-purple-900 block uppercase">
+                  {lang === 'ta' ? 'முன்னுரிமை நிலை' : 'PRIORITY TAG'}
+                </span>
                 <span className={`inline-block text-xs font-black px-3 py-1 rounded-full mt-1 ${
                   analysisResult.priority === 'Emergency' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-800'
                 }`}>
-                  {analysisResult.priority}
+                  {lang === 'ta' ? (TA_PRIO_MAP[analysisResult.priority] || analysisResult.priority) : analysisResult.priority}
                 </span>
               </div>
 
               <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-200">
-                <span className="text-[11px] font-bold text-gray-600 block uppercase">ASSIGNED DEPARTMENT</span>
+                <span className="text-[11px] font-bold text-gray-600 block uppercase">
+                  {lang === 'ta' ? 'ஒதுக்கப்பட்ட அரசுத் துறை' : 'ASSIGNED DEPARTMENT'}
+                </span>
                 <span className="text-xs font-bold text-gray-900 flex items-center gap-1.5 mt-1">
-                  <Building className="w-4 h-4 text-[#36682f]" />
-                  {analysisResult.department}
+                  <Building className="w-4 h-4 text-[#36682f] flex-shrink-0" />
+                  {lang === 'ta' ? (TA_DEPT_MAP[analysisResult.department] || analysisResult.department) : analysisResult.department}
                 </span>
               </div>
 
               <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-200">
-                <span className="text-[11px] font-bold text-gray-600 block uppercase">DETECTED LOCATION</span>
+                <span className="text-[11px] font-bold text-gray-600 block uppercase">
+                  {lang === 'ta' ? 'கண்டறியப்பட்ட பகுதி' : 'DETECTED LOCATION'}
+                </span>
                 <div className="flex items-center gap-2 mt-1">
-                  <MapPin className="w-4 h-4 text-orange-600" />
+                  <MapPin className="w-4 h-4 text-orange-600 flex-shrink-0" />
                   <select
                     value={locationName}
                     onChange={(e) => setLocationName(e.target.value)}
                     className="text-xs font-bold bg-white border border-gray-300 rounded-lg p-1"
                   >
-                    <option value="Sivakasi">Sivakasi</option>
-                    <option value="Virudhunagar">Virudhunagar</option>
-                    <option value="Rajapalayam">Rajapalayam</option>
-                    <option value="Aruppukkottai">Aruppukkottai</option>
-                    <option value="Sattur">Sattur</option>
+                    <option value="Sivakasi">சிவகாசி (Sivakasi)</option>
+                    <option value="Virudhunagar">விருதுநகர் (Virudhunagar)</option>
+                    <option value="Rajapalayam">ராஜபாளையம் (Rajapalayam)</option>
+                    <option value="Aruppukkottai">அருப்புக்கோட்டை (Aruppukkottai)</option>
+                    <option value="Sattur">சாத்தூர் (Sattur)</option>
                   </select>
                 </div>
               </div>
@@ -473,25 +517,25 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-[11px] font-bold text-gray-600 mb-1">
-                  Citizen Name <span className="text-gray-400 font-normal">(Optional)</span>:
+                  {lang === 'ta' ? 'குடிமகன் பெயர்' : 'Citizen Name'} <span className="text-gray-400 font-normal">({lang === 'ta' ? 'விருப்பம்' : 'Optional'})</span>:
                 </label>
                 <input
                   type="text"
                   value={citizenName}
                   onChange={(e) => setCitizenName(e.target.value)}
-                  placeholder="e.g. K. Muthu"
+                  placeholder={lang === 'ta' ? 'எ.கா. முத்து' : 'e.g. K. Muthu'}
                   className="w-full text-xs font-semibold p-2.5 rounded-xl border border-gray-300 focus:outline-none"
                 />
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-gray-600 mb-1">
-                  Mobile Phone <span className="text-gray-400 font-normal">(Optional)</span>:
+                  {lang === 'ta' ? 'கைபேசி எண்' : 'Mobile Phone'} <span className="text-gray-400 font-normal">({lang === 'ta' ? 'விருப்பம்' : 'Optional'})</span>:
                 </label>
                 <input
                   type="text"
                   value={citizenPhone}
                   onChange={(e) => setCitizenPhone(e.target.value)}
-                  placeholder="e.g. 9876543210"
+                  placeholder={lang === 'ta' ? 'எ.கா. 9876543210' : 'e.g. 9876543210'}
                   className="w-full text-xs font-semibold p-2.5 rounded-xl border border-gray-300 focus:outline-none"
                 />
               </div>
@@ -506,17 +550,18 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
                 }}
                 className="btn btn-outline flex-1 py-3 text-xs font-bold"
               >
-                Clear & Re-record
+                {lang === 'ta' ? 'அழித்து மீண்டும் பேசுக' : 'Clear & Re-record'}
               </button>
 
               <button
                 onClick={handleSubmitComplaint}
                 className="btn bg-[#36682f] text-white hover:bg-[#1e381b] flex-[2] py-3 text-sm font-bold shadow-md"
               >
-                <span>புகாரை சமர்ப்பி (Submit Complaint)</span>
+                <span>{lang === 'ta' ? 'புகாரை சமர்ப்பி' : 'Submit Complaint'}</span>
                 <ArrowRight className="w-5 h-5 text-sage-300" />
               </button>
             </div>
+
 
           </div>
         )}
