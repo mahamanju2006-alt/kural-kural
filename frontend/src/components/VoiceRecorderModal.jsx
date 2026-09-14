@@ -316,7 +316,7 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
                   selectedLang === 'ta-IN' ? 'bg-[#36682f] text-white shadow-sm' : 'text-gray-700 hover:text-[#152612]'
                 }`}
               >
-                தமிழ் (Tamil Speech)
+                தமிழ்
               </button>
               <button
                 onClick={() => setSelectedLang('en-IN')}
@@ -351,17 +351,17 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
             {/* Quick Demo Voice Grievances */}
             <div className="w-full flex flex-col gap-1.5 text-left">
               <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
-                {selectedLang === 'ta-IN' ? '⚡ விரைவு மாதிரி புகார்கள் (Instant Samples):' : '⚡ INSTANT SAMPLES (CLICK TO TEST):'}
+                {selectedLang === 'ta-IN' ? '⚡ விரைவு மாதிரி புகார்கள்:' : '⚡ INSTANT SAMPLES (CLICK TO TEST):'}
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {(selectedLang === 'ta-IN' ? [
-                  { label: '💧 குடிநீர் விநியோகம் தடை (Sivakasi)', text: 'சிவகாசியில் கடந்த 2 நாட்களாக குடிநீர் வரவில்லை. உடனடியாக சரிசெய்யவும்.' },
-                  { label: '⚡ மின்கம்பி அறுந்து விழுந்தது (Emergency)', text: 'விருதுநகர் மெயின் ரோட்டில் டிரான்ஸ்பார்மர் ஒயர் அறுந்து கிடக்கிறது. ஆபத்தாக உள்ளது.' },
-                  { label: '🛣️ சாலை சேதம் (Potholes)', text: 'ராஜபாளையம் பஸ் ஸ்டாண்ட் அருகில் சாலையில் பெரிய பள்ளங்கள் உள்ளன.' }
+                  { label: '💧 குடிநீர் விநியோகம் தடை', text: 'சிவகாசியில் கடந்த 2 நாட்களாக குடிநீர் வரவில்லை. உடனடியாக சரிசெய்யவும்.' },
+                  { label: '⚡ மின்கம்பி அறுந்து விழுந்தது', text: 'விருதுநகர் மெயின் ரோட்டில் டிரான்ஸ்பார்மர் ஒயர் அறுந்து கிடக்கிறது. ஆபத்தாக உள்ளது.' },
+                  { label: '🛣️ சாலை சேதம்', text: 'ராஜபாளையம் பஸ் ஸ்டாண்ட் அருகில் சாலையில் பெரிய பள்ளங்கள் உள்ளன.' }
                 ] : [
-                  { label: '💧 Water Supply Interrupted (Sivakasi)', text: 'No water supply in Sivakasi for the last 2 days. Please resolve immediately.' },
-                  { label: '⚡ Electricity Wire Snapped (Emergency)', text: 'Transformer wire snapped on Virudhunagar Main Road. Extremely dangerous.' },
-                  { label: '🛣️ Road Damage (Potholes)', text: 'Big potholes near Rajapalayam bus stand causing heavy traffic problems.' }
+                  { label: '💧 Water Supply Interrupted', text: 'No water supply in Sivakasi for the last 2 days. Please resolve immediately.' },
+                  { label: '⚡ Electricity Wire Snapped', text: 'Transformer wire snapped on Virudhunagar Main Road. Extremely dangerous.' },
+                  { label: '🛣️ Road Damage', text: 'Big potholes near Rajapalayam bus stand causing heavy traffic problems.' }
                 ]).map((chip) => (
                   <button
                     key={chip.label}
@@ -382,7 +382,7 @@ export default function VoiceRecorderModal({ isOpen, onClose, lang, initialText 
 
             <div className="w-full pt-4 border-t border-gray-200">
               <label className="block text-left text-xs font-bold text-gray-700 mb-1">
-                {selectedLang === 'ta-IN' ? 'அல்லது உரையாக தட்டச்சு செய்க (Or Type Text Directly):' : 'Or Type Text Directly:'}
+                {selectedLang === 'ta-IN' ? 'அல்லது உரையாக தட்டச்சு செய்க:' : 'Or Type Text Directly:'}
               </label>
 
               <textarea
